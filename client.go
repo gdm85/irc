@@ -12,7 +12,7 @@ import (
 	"sync"
 	"time"
 
-	tomb "gopkg.in/tomb.v2"
+	"github.com/gdm85/tomb"
 )
 
 type Client struct {
