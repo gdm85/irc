@@ -135,3 +135,10 @@ func (e *Event) Copy() *Event {
 
 	return newEvent
 }
+
+func (e *Event) Message() string {
+	if len(e.Args) == 0 {
+		return ""
+	}
+	return e.Args[len(e.Args)-1]
+}

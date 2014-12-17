@@ -278,6 +278,7 @@ func (c *Client) MentionReply(e *Event, format string, v ...interface{}) error {
 }
 
 func (c *Client) CTCPReply(e *Event, format string, v ...interface{}) error {
+	// is this check really necessary?
 	if len(e.Args) < 1 || len(e.Args[0]) < 1 {
 		return errors.New("Invalid IRC event")
 	}
@@ -301,5 +302,39 @@ func (c *Client) Reply(e *Event, format string, v ...interface{}) error {
 		c.Writef("PRIVMSG %s :"+format, v...)
 	}
 
+	return nil
+}
+
+func (c *Client) Noticef(recipient, format string, v ...interface{}) error {
+	// Sanity check
+	if len(recipient) < 1 {
+		return errors.New("Invalid recipient")
+	}
+
+	v = prepend(recipient, v)
+	c.Writef("NOTICE %s :\x01"+format+"\x01", v...)
+	return nil
+}
+
+func (c *Client) Privmsgf(recipient, format string, v ...interface{}) error {
+	// Sanity check
+	if len(recipient) < 1 {
+		return errors.New("Invalid recipient")
+	}
+
+	v = prepend(recipient, v)
+	c.Writef("PRIVMSG %s :"+format, v...)
+
+	return nil
+}
+
+func (c *Client) Actionf(recipient, format string, v ...interface{}) error {
+	// Sanity check
+	if len(recipient) < 1 {
+		return errors.New("Invalid recipient")
+	}
+
+	v = prepend(recipient, v)
+	c.Writef("PRIVMSG %s :\x01ACTION "+format+"\x01", v...)
 	return nil
 }
